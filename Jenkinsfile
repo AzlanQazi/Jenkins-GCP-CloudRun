@@ -1,9 +1,9 @@
 pipeline {
     agent any
-    //tools {
+    tools {
 	// jdk 'java17015'
-	// maven 'maven387'
-    // }
+	maven 'Maven-3.9'
+    }
     // environment {
 	// SONAR_SCANNER_HOME = tool 'sonar7'
 	// IMAGE_NAME = "java-app"
