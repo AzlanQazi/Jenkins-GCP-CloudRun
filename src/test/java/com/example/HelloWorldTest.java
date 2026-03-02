@@ -25,9 +25,9 @@ public class HelloWorldTest {
     
     @Test
     public void testGetMessage() {
-        assertEquals("It worked on my machine. And surprisingly, it works here too!<br>" +
-                "Jenkins did the heavy lifting; I’m just here for the traffic.<br>" +
-                "This app was hand-delivered by a very hardworking pipeline.<br>" +
+        assertEquals("It worked on my machine. And surprisingly, it works here too! " +
+                "Jenkins did the heavy lifting; I’m just here for the traffic. " +
+                "This app was hand-delivered by a very hardworking pipeline. " +
                 "Warning: May contain traces of late-night debugging.", app.getMessage());
     }
     
@@ -37,9 +37,9 @@ public class HelloWorldTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().string(containsString(
-                    "It worked on my machine. And surprisingly, it works here too!<br>" +
-                    "Jenkins did the heavy lifting; I’m just here for the traffic.<br>" +
-                    "This app was hand-delivered by a very hardworking pipeline.<br>" +
+                    "It worked on my machine. And surprisingly, it works here too! " +
+                    "Jenkins did the heavy lifting; I’m just here for the traffic. " +
+                    "This app was hand-delivered by a very hardworking pipeline. " +
                     "Warning: May contain traces of late-night debugging.")));
     }
 }
