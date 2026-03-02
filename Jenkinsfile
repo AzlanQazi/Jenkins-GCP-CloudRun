@@ -1,9 +1,9 @@
 pipeline {
     agent any
-    // tools {
-	// jdk 'java17015'
-	// maven 'Maven-3.9'
-    // }
+    tools {
+	    jdk 'java2109'
+	    maven 'maven399'
+    }
     // environment {
 	// SONAR_SCANNER_HOME = tool 'sonar7'
 	// IMAGE_NAME = "java-app"
@@ -17,8 +17,8 @@ pipeline {
         stage('Initialize Pipeline'){
             steps {
                 echo 'Initializing Pipeline ...'
-		// sh 'java -version'
-		// sh 'mvn -version'
+		        sh 'java -version'
+		        sh 'mvn -version'
             }
         }
         stage('Checkout GitHub Codes'){
