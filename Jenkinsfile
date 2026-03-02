@@ -49,6 +49,7 @@ pipeline {
                            -Dsonar.projectKey=jenkinsgcp \
                            -Dsonar.sources=. \
                            -Dsonar.host.url=http://sonarqube-dind:9000 \
+						   		-Dsonar.javascript.enabled=false
 						   -Dsonar.java.binaries=target/classes \
                            -Dsonar.token=$sonarToken
 						'''
