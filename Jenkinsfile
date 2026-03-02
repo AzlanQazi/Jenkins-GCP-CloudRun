@@ -4,15 +4,15 @@ pipeline {
 	    jdk 'java2109'
 	    maven 'maven399'
     }
-    // environment {
-	// SONAR_SCANNER_HOME = tool 'sonar7'
+    environment {
+		SONAR_SCANNER_HOME = tool 'sonar7'
 	// IMAGE_NAME = "java-app"
         // IMAGE_TAG = "${BUILD_NUMBER}"
 	// GCP_PROJECT_ID = "focal-dock-440200-u5"
 	// FULL_IMAGE_NAME = "us-docker.pkg.dev/${GCP_PROJECT_ID}/java-app-repo-02/${IMAGE_NAME}:${IMAGE_TAG}"
 	// SERVICE_NAME = "java-app-service"
 	// REGION = "us-central1"
-    // }
+    }
     stages {
         stage('Initialize Pipeline'){
             steps {
@@ -42,18 +42,18 @@ pipeline {
         stage('SonarQube Analysis'){
             steps {
                 echo 'Running Static Code Analysis with SonarQube'
-		// withCredentials([string(credentialsId: 'sonartoken', variable: 'sonarToken')]) {
-   			// withSonarQubeEnv('sonar') {
-				// sh '''
-					// ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-  					// -Dsonar.projectKey=jenkinsgcp \
-  					// -Dsonar.sources=. \
-  					// -Dsonar.host.url=http://172.18.0.3:9000 \
-       					// -Dsonar.java.binaries=target/classes \
-  					// -Dsonar.token=$sonarToken
-    				// '''
-			// }
-		// }
+				withCredentials([string(credentialsId: 'sonartoken', variable: 'sonarToken')]) {
+					withSonarQubeEnv('sonar') {
+						sh '''
+						   ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                           -Dsonar.projectKey=jenkinsgcp \
+                           -Dsonar.sources=. \
+                           -Dsonar.host.url=http://localhost:9000 \
+						   -Dsonar.java.binaries=target/classes \
+                           -Dsonar.token=$sonarToken
+						'''
+                    }
+                }
             }
         }
         stage('Trivy FS Scan'){
