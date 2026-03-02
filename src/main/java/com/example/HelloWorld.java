@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloWorld {
 
     public String getMessage() {
-        return "It worked on my machine. And surprisingly, it works here too!<br>" +
-                "Jenkins did the heavy lifting; I’m just here for the traffic.<br>" +
-                "This app was hand-delivered by a very hardworking pipeline.<br>" +
+        return "It worked on my machine. And surprisingly, it works here too! " +
+                "Jenkins did the heavy lifting; I’m just here for the traffic. " +
+                "This app was hand-delivered by a very hardworking pipeline. " +
                 "Warning: May contain traces of late-night debugging.";
     }
 
