@@ -1,18 +1,18 @@
 pipeline {
-    agent any
-    tools {
-	jdk 'java17015'
-	maven 'maven387'
-    }
-    environment {
-	SONAR_SCANNER_HOME = tool 'sonar7'
-	IMAGE_NAME = "java-app"
-        IMAGE_TAG = "${BUILD_NUMBER}"
-	GCP_PROJECT_ID = "focal-dock-440200-u5"
-	FULL_IMAGE_NAME = "us-docker.pkg.dev/${GCP_PROJECT_ID}/java-app-repo-02/${IMAGE_NAME}:${IMAGE_TAG}"
-	SERVICE_NAME = "java-app-service"
-	REGION = "us-central1"
-    }
+    //agent any
+    //tools {
+	// jdk 'java17015'
+	// maven 'maven387'
+    // }
+    // environment {
+	// SONAR_SCANNER_HOME = tool 'sonar7'
+	// IMAGE_NAME = "java-app"
+        // IMAGE_TAG = "${BUILD_NUMBER}"
+	// GCP_PROJECT_ID = "focal-dock-440200-u5"
+	// FULL_IMAGE_NAME = "us-docker.pkg.dev/${GCP_PROJECT_ID}/java-app-repo-02/${IMAGE_NAME}:${IMAGE_TAG}"
+	// SERVICE_NAME = "java-app-service"
+	// REGION = "us-central1"
+    // }
     stages {
         stage('Initialize Pipeline'){
             steps {
