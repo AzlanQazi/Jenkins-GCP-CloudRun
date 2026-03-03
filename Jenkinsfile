@@ -8,8 +8,8 @@ pipeline {
 		SONAR_SCANNER_HOME = tool 'sonar7'
 		IMAGE_NAME = "java-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
-	// GCP_PROJECT_ID = "focal-dock-440200-u5"
-	// FULL_IMAGE_NAME = "us-docker.pkg.dev/${GCP_PROJECT_ID}/java-app-repo-02/${IMAGE_NAME}:${IMAGE_TAG}"
+	    GCP_PROJECT_ID = "project-8607a4d0-e597-411f-9c2"
+	    FULL_IMAGE_NAME = "us-docker.pkg.dev/${GCP_PROJECT_ID}/java-app-repo-02/${IMAGE_NAME}:${IMAGE_TAG}"
 	// SERVICE_NAME = "java-app-service"
 	// REGION = "us-central1"
     }
@@ -86,19 +86,29 @@ pipeline {
 				//--cache-dir ${WORKSPACE}/.trivy-cache 
             }
         }
-	stage('Authenticate with GCP, Tag & Push to Artifact Registry') {
-            steps {
-		echo 'Authenticate with GCP, tag and Push Image to Artifact Registry'
-		// withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) {
-    			// withEnv(["GOOGLE_APPLICATION_CREDENTIALS=$gcpCred"]) {
-				// sh '''
-					// echo Activating GCP service account...
-                    			// gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-                    			// gcloud config set project $GCP_PROJECT_ID
-		       
-                    			// echo Configuring Docker to use gcloud credentials...
-                    			// gcloud auth configure-docker us-docker.pkg.dev --quiet
-    				// '''
+	    stage('Authenticate with GCP, Tag & Push to Artifact Registry') {
+        	steps {
+				echo 'Authenticate with GCP, tag and Push Image to Artifact Registry'
+				withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) { 
+					withEnv(['GOOLE_APPLICATION_CREDENTIALS=$gcpCred']) {
+						sh '''
+							echo Activating GCP service account...
+                    		gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                    		gcloud config set project $GCP_PROJECT_ID
+		                	echo Configuring Docker to use gcloud credentials...
+                    		gcloud auth configure-docker us-docker.pkg.dev --quiet
+    				    '''
+						script {
+							sh '''
+								gcloud artifacts repositories create java-app-repo-${IMAGE_TAG} --repository-format=docker --location=us --description="Docker repository" --project=$GCP_PROJECT_ID
+     						'''
+							sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}"
+							sh "docker push ${FULL_IMAGE_NAME}"
+							echo "Image pushed to: ${FULL_IMAGE_NAME}"
+						}
+					}
+				}
+				
 				// script {
 					// sh '''
 						// gcloud artifacts repositories create java-app-repo-${IMAGE_TAG} --repository-format=docker --location=us --description="Docker repository" --project=$GCP_PROJECT_ID
