@@ -51,7 +51,6 @@ pipeline {
                            -Dsonar.host.url=http://sonarqube-dind:9000 \
 						   -Dsonar.java.binaries=target/classes \
                            -Dsonar.token=$sonarToken
-						   		-Dsonar.exclusions=**/*.html,**/*.js,**/*.ts
 						'''
                     }
                 }
