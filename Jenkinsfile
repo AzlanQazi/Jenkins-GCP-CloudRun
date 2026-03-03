@@ -153,7 +153,7 @@ pipeline {
                         			--region ${REGION} \
                         			--format="value(status.url)")
 			    				echo "Service deployed successfully!"
-                        		echo "Service URL: ${SERVICE_URL}"
+                        		echo "Service URL: \${SERVICE_URL}"
                 			"""
 						}
 				}
