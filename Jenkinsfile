@@ -73,7 +73,16 @@ pipeline {
         stage('Trivy Security Scan'){
             steps {
                 echo 'Scanning Docker Image with Trivy'
-		        sh "trivy image --severity HIGH,CRITICAL --no-progress --format table -o trivyFSScanReport.html --image-src docker ${IMAGE_NAME}:${IMAGE_TAG}"
+				// 1. Save the image to a file (this uses the Docker client, which works)
+                sh "docker save ${IMAGE_NAME}:${IMAGE_TAG} -o java-app.tar"
+            
+                // 2. Tell Trivy to scan the file directly using the --input (or -i) flag
+                sh "trivy image --severity HIGH,CRITICAL --no-progress --format table -o trivyImageScanReport.html --input java-app.tar"
+            
+                // 3. Clean up the file so it doesn't take up space on your Jenkins server
+                sh "rm java-app.tar"
+				
+		        //sh "trivy image --severity HIGH,CRITICAL --no-progress --format table -o trivyFSScanReport.html imager ${IMAGE_NAME}:${IMAGE_TAG}"
 				//--cache-dir ${WORKSPACE}/.trivy-cache 
             }
         }
