@@ -90,7 +90,7 @@ pipeline {
         	steps {
 				echo 'Authenticate with GCP, tag and Push Image to Artifact Registry'
 				withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) { 
-					withEnv(["GOOLE_APPLICATION_CREDENTIALS=$gcpCred"]) {
+					withEnv(["GOOGLE_APPLICATION_CREDENTIALS=$gcpCred"]) {
 						sh '''
 							echo Activating GCP service account...
                     		gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
