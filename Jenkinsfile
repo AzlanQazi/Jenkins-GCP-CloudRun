@@ -90,14 +90,22 @@ pipeline {
         	steps {
 				echo 'Authenticate with GCP, tag and Push Image to Artifact Registry'
 				withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) { 
-					withEnv(["GOOGLE_APPLICATION_CREDENTIALS=$gcpCred"]) {
-						sh '''
-							echo Activating GCP service account...
-                    		gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-                    		gcloud config set project $GCP_PROJECT_ID
-		                	echo Configuring Docker to use gcloud credentials...
-                    		gcloud auth configure-docker us-docker.pkg.dev --quiet
-    				    '''
+					withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${gcpCred}"]) {
+        				sh """
+        					echo "Activating GCP service account..."
+       						gcloud auth activate-service-account --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+        					gcloud config set project "${GCP_PROJECT_ID}"
+      	  					echo "Configuring Docker to use gcloud credentials..."
+        					gcloud auth configure-docker us-docker.pkg.dev --quiet
+    					"""
+					// withEnv(["GOOGLE_APPLICATION_CREDENTIALS=$gcpCred"]) {
+					// 	sh '''
+					// 		echo Activating GCP service account...
+     //                		gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+     //                		gcloud config set project $GCP_PROJECT_ID
+		   //              	echo Configuring Docker to use gcloud credentials...
+     //                		gcloud auth configure-docker us-docker.pkg.dev --quiet
+    	// 			    '''
 						script {
 							sh '''
 								gcloud artifacts repositories create java-app-repo-${IMAGE_TAG} --repository-format=docker --location=us --description="Docker repository" --project=$GCP_PROJECT_ID
