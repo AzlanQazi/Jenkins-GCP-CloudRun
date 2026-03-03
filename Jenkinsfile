@@ -108,7 +108,7 @@ pipeline {
     	// 			    '''
 						script {
 							sh '''
-								gcloud artifacts repositories create java-app-repo-${IMAGE_TAG} --repository-format=docker --location=us --description="Docker repository" --project=$GCP_PROJECT_ID
+								gcloud artifacts repositories create java-app-repo-02 --repository-format=docker --location=us --description="Docker repository" --project=$GCP_PROJECT_ID
      						'''
 							sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}"
 							sh "docker push ${FULL_IMAGE_NAME}"
