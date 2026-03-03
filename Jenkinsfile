@@ -128,9 +128,9 @@ pipeline {
 				withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) { 
 						withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${gcpCred}"]) {
 							sh """
-								gcloud run deploy $SERVICE_NAME \
-            					--image=$FULL_IMAGE_NAME \
-            					--region=$REGION \
+								gcloud run deploy ${SERVICE_NAME} \
+            					--image=${FULL_IMAGE_NAME} \
+            					--region=${REGION} \
             					--platform=managed \
             					--allow-unauthenticated \
 		 						--port=8090 \
@@ -148,12 +148,12 @@ pipeline {
 				withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) { 
 						withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${gcpCred}"]) {
 							sh """
-                    			SERVICE_URL=$(gcloud run services describe $SERVICE_NAME \
+                    			SERVICE_URL=$(gcloud run services describe ${SERVICE_NAME} \
                         			--platform managed \
-                        			--region $REGION \
+                        			--region ${REGION} \
                         			--format="value(status.url)")
 			    				echo "Service deployed successfully!"
-                        		echo "Service URL: $SERVICE_URL"
+                        		echo "Service URL: ${SERVICE_URL}"
                 			"""
 						}
 				}
