@@ -4,6 +4,7 @@ pipeline {
 	    jdk 'java2109'
 	    maven 'maven399'
     }
+	
     environment {
 		SONAR_SCANNER_HOME = tool 'sonar7'
 		IMAGE_NAME = "java-app"
@@ -13,7 +14,9 @@ pipeline {
 	    SERVICE_NAME = "java-app-service"
 	    REGION = "us-central1"
     }
+	
     stages {
+		
         stage('Initialize Pipeline'){
             steps {
                 echo 'Initializing Pipeline ...'
@@ -21,24 +24,28 @@ pipeline {
 		        sh 'mvn -version'
             }
         }
+		
         stage('Checkout GitHub Codes'){
             steps {
                 echo 'Checking out GitHub Codes ...'
 		        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'jenkins-gcp', url: 'https://github.com/AzlanQazi/Jenkins-GCP-CloudRun.git']])
             }
         }
+		
         stage('Maven Build'){
             steps {
                 echo 'Building Java App with Maven'	
 		        sh 'mvn clean package'
             }
         }
+		
         stage('JUnit Test of Java App'){
             steps {
                 echo 'JUnit Testing'
 		        sh 'mvn test'
             }
         }
+		
         stage('SonarQube Analysis'){
             steps {
                 echo 'Running Static Code Analysis with SonarQube'
@@ -56,12 +63,14 @@ pipeline {
                 }
             }
         }
+		
         stage('Trivy FS Scan'){
             steps {
                 echo 'Scanning File System with Trivy FS ...'
 		        sh 'trivy fs --format table -o FSScanReport.html'
             }
         }
+		
         stage('Build & Tag Docker Image'){
             steps {
                 echo 'Building the Java App Docker Image'
@@ -70,6 +79,7 @@ pipeline {
 				}
             }
         }
+		
         stage('Trivy Security Scan'){
             steps {
                 echo 'Scanning Docker Image with Trivy'
@@ -86,6 +96,7 @@ pipeline {
 				//--cache-dir ${WORKSPACE}/.trivy-cache 
             }
         }
+		
 	    stage('Authenticate with GCP, Tag & Push to Artifact Registry') {
         	steps {
 				echo 'Authenticate with GCP, tag and Push Image to Artifact Registry'
@@ -110,6 +121,7 @@ pipeline {
 				}
             }
         }
+		
 		stage('Deploy to Cloud Run') {
 			steps {
 				echo 'Deploying Image to Google Cloud Run'
@@ -129,22 +141,24 @@ pipeline {
 				}
 			}
 		}
+		
 		stage('Get Cloud Run Service URL') {
-       	 	    steps {
+       	 	steps {
 				echo 'Getting Cloud Run Service URL'
-		    	// withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) {
-    				// withEnv(["GOOGLE_APPLICATION_CREDENTIALS=$gcpCred"]) {
-					// sh '''
-                    				// SERVICE_URL=$(gcloud run services describe $SERVICE_NAME \
-                        				// --platform managed \
-                        				// --region $REGION \
-                        				// --format="value(status.url)")
-			    			// echo "Service deployed successfully!"
-                        			// echo "Service URL: $SERVICE_URL"
-                			// '''
-					// }
-				// }
-            		}
-       	 	}
+				withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) { 
+						withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${gcpCred}"]) {
+							sh """
+                    			SERVICE_URL=$(gcloud run services describe $SERVICE_NAME \
+                        		--platform managed \
+                        		--region $REGION \
+                        		--format="value(status.url)")
+			    				echo "Service deployed successfully!"
+                        		echo "Service URL: $SERVICE_URL"
+                			"""
+						}
+				}
+            }
+       	}
+		
 	}
 }
