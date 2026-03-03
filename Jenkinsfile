@@ -148,7 +148,7 @@ pipeline {
 				withCredentials([file(credentialsId: 'gcpjmsa', variable: 'gcpCred')]) { 
 						withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${gcpCred}"]) {
 							sh """
-                    			SERVICE_URL=$(gcloud run services describe ${SERVICE_NAME} \
+                    			SERVICE_URL=\$(gcloud run services describe ${SERVICE_NAME} \
                         			--platform managed \
                         			--region ${REGION} \
                         			--format="value(status.url)")
