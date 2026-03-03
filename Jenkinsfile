@@ -73,7 +73,7 @@ pipeline {
         stage('Trivy Security Scan'){
             steps {
                 echo 'Scanning Docker Image with Trivy'
-		        sh "export DOCKER_API_VERSION=1.41 && trivy --severity HIGH,CRITICAL --no-progress --format table -o trivyFSScanReport.html image ${IMAGE_NAME}:${IMAGE_TAG}"
+		        sh "trivy image --severity HIGH,CRITICAL --no-progress --format table -o trivyFSScanReport.html --image-src docker ${IMAGE_NAME}:${IMAGE_TAG}"
 				//--cache-dir ${WORKSPACE}/.trivy-cache 
             }
         }
